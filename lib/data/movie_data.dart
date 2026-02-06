@@ -37,4 +37,13 @@ final List<Movie> movies = [
     director: "Uzziah Fransico",
     releasedDate: DateTime.now(),
   ),
+  Movie(
+    id: 5,
+    image: 'assets/bfg.webp',
+    title: 'The BFG',
+    description:
+        'An imaginative fantasy adventure about a 10-year-old orphan named Sophie who is whisked away to Giant Country by a 24-foot "Big Friendly Giant. Unlike his larger, man-eating neighbors, the BFG is a gentle soul who collects and creates dreams for children.',
+    director: "John Cez Casupanan",
+    releasedDate: DateTime.now(),
+  ),
 ];

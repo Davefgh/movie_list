@@ -133,10 +133,25 @@ class _HomeState extends State<Home> {
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                truncate(movie.description, 60),
+                                truncate(movie.description, 100),
                                 style: const TextStyle(
                                   color: Colors.white60,
                                   fontSize: 12,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Director: ${movie.director}',
+                                style: const TextStyle(
+                                  color: Colors.white54,
+                                  fontSize: 11,
+                                ),
+                              ),
+                              Text(
+                                'Date: ${movie.releasedDate.year}-${movie.releasedDate.month.toString().padLeft(2, '0')}-${movie.releasedDate.day.toString().padLeft(2, '0')}',
+                                style: const TextStyle(
+                                  color: Colors.white54,
+                                  fontSize: 11,
                                 ),
                               ),
                             ],
