@@ -43,53 +43,68 @@ class _HomeState extends State<Home> {
       ),
       body: Column(
         children: [
-          // Top Featured Section
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Image.asset(
-                    selectedMovie.image,
-                    width: 180,
-                    height: 180,
-                    fit: BoxFit.cover,
+          // Fixed Featured Section at the Top
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(
+              vertical: 20.0,
+              horizontal: 30.0,
+            ),
+            decoration: const BoxDecoration(
+              color: Colors.black,
+              border: Border(
+                bottom: BorderSide(color: Colors.white12, width: 1),
+              ),
+            ),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Column(
+                key: ValueKey<int>(selectedMovie.id),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Image.asset(
+                      selectedMovie.image,
+                      width: 160,
+                      height: 160,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 15),
-                Text(
-                  selectedMovie.title,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
+                  const SizedBox(height: 15),
+                  Text(
+                    selectedMovie.title,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  truncate(selectedMovie.description, 150),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white70, fontSize: 13),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  'Director: ${selectedMovie.director}',
-                  style: const TextStyle(
-                    color: Colors.amberAccent,
-                    fontSize: 13,
-                    fontStyle: FontStyle.italic,
+                  const SizedBox(height: 5),
+                  Text(
+                    truncate(selectedMovie.description, 120),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.white70, fontSize: 13),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 5),
+                  Text(
+                    'Director: ${selectedMovie.director}',
+                    style: const TextStyle(
+                      color: Colors.amberAccent,
+                      fontSize: 13,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          const Divider(color: Colors.white24, height: 1),
 
           // Scrollable List
           Expanded(
             child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
               itemCount: movies.length,
               itemBuilder: (context, index) {
                 final movie = movies[index];
@@ -105,7 +120,7 @@ class _HomeState extends State<Home> {
                     color: isSelected ? Colors.white10 : Colors.black26,
                     margin: const EdgeInsets.symmetric(
                       horizontal: 15,
-                      vertical: 10,
+                      vertical: 8,
                     ),
                     child: Row(
                       children: [
@@ -133,7 +148,7 @@ class _HomeState extends State<Home> {
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                truncate(movie.description, 100),
+                                truncate(movie.description, 80),
                                 style: const TextStyle(
                                   color: Colors.white60,
                                   fontSize: 12,
