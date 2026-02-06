@@ -37,4 +37,40 @@ final List<Movie> movies = [
     director: "Uzziah Fransico",
     releasedDate: DateTime.now(),
   ),
+  Movie(
+    id: 5,
+    image: 'assets/bfg.webp',
+    title: 'The BFG',
+    description:
+        'An imaginative fantasy adventure about a 10-year-old orphan named Sophie who is whisked away to Giant Country by a 24-foot "Big Friendly Giant. Unlike his larger, man-eating neighbors, the BFG is a gentle soul who collects and creates dreams for children.',
+    director: "John Cez Casupanan",
+    releasedDate: DateTime.now(),
+  ),
+  Movie(
+    id: 6,
+    image: 'assets/endgme.webp',
+    title: 'Avengers: Endgame',
+    description:
+        'After the devastating events of Avengers: Infinity War, the universe is in ruins. With half of all life gone, the remaining Avengers must band together for one final, desperate mission: to reverse Thanos\'s actions and restore balance to the cosmos.',
+    director: "Christian Dave Alicaba",
+    releasedDate: DateTime.now(),
+  ),
+  Movie(
+    id: 7,
+    image: 'assets/Fast and Furious.webp',
+    title: 'Fast & Furious',
+    description:
+        'Dom Toretto leads a crew of street racers, but when a new threat emerges, they must team up with the law to stop a global criminal organization. Packed with high-octane action, impossible stunts, and family loyalty, this film kicks off a legendary franchise.',
+    director: "Daryl Cedillo",
+    releasedDate: DateTime.now(),
+  ),
+  Movie(
+    id: 8,
+    image: 'assets/Pirates of the Caribbean.webp',
+    title: 'Pirates of the Caribbean',
+    description:
+        'Captain Jack Sparrow, a witty and eccentric pirate, teams up with a blacksmith and a governor\'s daughter to rescue her from a cursed pirate crew. Filled with sword fights, supernatural elements, and unforgettable characters, this adventure sails into a world of magic and mayhem.',
+    director: "Mang Jose ",
+    releasedDate: DateTime.now(),
+  ),
 ];
