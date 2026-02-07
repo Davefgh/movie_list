@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_list/data/movie_data.dart';
 import 'package:movie_list/models/movies.dart';
+import 'package:shimmer/shimmer.dart';
 
 const String movieTitle = "Movixor";
 
@@ -13,16 +14,158 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late Movie selectedMovie;
+  bool isLoadingAll = true;
+  bool isLoadingDetail = false;
 
   @override
   void initState() {
     super.initState();
     selectedMovie = movies.first;
+    _startInitialLoad();
+  }
+
+  void _startInitialLoad() async {
+    await Future.delayed(const Duration(seconds: 1));
+    if (mounted) {
+      setState(() {
+        isLoadingAll = false;
+      });
+    }
+  }
+
+  void _onMovieSelected(Movie movie) async {
+    if (selectedMovie.id == movie.id) return;
+
+    setState(() {
+      isLoadingDetail = true;
+    });
+
+    await Future.delayed(const Duration(seconds: 1));
+
+    if (mounted) {
+      setState(() {
+        selectedMovie = movie;
+        isLoadingDetail = false;
+      });
+    }
   }
 
   String truncate(String text, int length) {
     if (text.length <= length) return text;
     return '${text.substring(0, length)}...';
+  }
+
+  Widget _buildSkeletonDetail() {
+    return Shimmer.fromColors(
+      baseColor: Colors.white12,
+      highlightColor: Colors.white24,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 160,
+            height: 160,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(height: 15),
+          Container(
+            width: 200,
+            height: 24,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Container(
+            width: double.infinity,
+            height: 14,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          const SizedBox(height: 5),
+          Container(
+            width: 150,
+            height: 14,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Container(
+            width: 120,
+            height: 14,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSkeletonListItem() {
+    return Shimmer.fromColors(
+      baseColor: Colors.white10,
+      highlightColor: Colors.white24,
+      child: Card(
+        color: Colors.black26,
+        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+        child: Row(
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 150,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Container(
+                    width: 100,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -43,7 +186,7 @@ class _HomeState extends State<Home> {
       ),
       body: Column(
         children: [
-          // Fixed Featured Section at the Top
+          // Featured Section
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(
@@ -58,126 +201,132 @@ class _HomeState extends State<Home> {
             ),
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
-              child: Column(
-                key: ValueKey<int>(selectedMovie.id),
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: Image.asset(
-                      selectedMovie.image,
-                      width: 160,
-                      height: 160,
-                      fit: BoxFit.cover,
+              child: (isLoadingAll || isLoadingDetail)
+                  ? _buildSkeletonDetail()
+                  : Column(
+                      key: ValueKey<int>(selectedMovie.id),
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Image.asset(
+                            selectedMovie.image,
+                            width: 160,
+                            height: 160,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        Text(
+                          selectedMovie.title,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          truncate(selectedMovie.description, 120),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 13,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          'Director: ${selectedMovie.director}',
+                          style: const TextStyle(
+                            color: Colors.amberAccent,
+                            fontSize: 13,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 15),
-                  Text(
-                    selectedMovie.title,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    truncate(selectedMovie.description, 120),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white70, fontSize: 13),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    'Director: ${selectedMovie.director}',
-                    style: const TextStyle(
-                      color: Colors.amberAccent,
-                      fontSize: 13,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ],
-              ),
             ),
           ),
 
           // Scrollable List
           Expanded(
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              itemCount: movies.length,
-              itemBuilder: (context, index) {
-                final movie = movies[index];
-                final isSelected = selectedMovie.id == movie.id;
+            child: isLoadingAll
+                ? ListView.builder(
+                    itemCount: 5,
+                    itemBuilder: (context, index) => _buildSkeletonListItem(),
+                  )
+                : ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: movies.length,
+                    itemBuilder: (context, index) {
+                      final movie = movies[index];
+                      final isSelected = selectedMovie.id == movie.id;
 
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedMovie = movie;
-                    });
-                  },
-                  child: Card(
-                    color: isSelected ? Colors.white10 : Colors.black26,
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 15,
-                      vertical: 8,
-                    ),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.asset(
-                            movie.image,
-                            width: 80,
-                            height: 80,
-                            fit: BoxFit.cover,
+                      return GestureDetector(
+                        onTap: () => _onMovieSelected(movie),
+                        child: Card(
+                          color: isSelected ? Colors.white10 : Colors.black26,
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 8,
                           ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
                             children: [
-                              Text(
-                                movie.title,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Image.asset(
+                                  movie.image,
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                              const SizedBox(height: 2),
-                              Text(
-                                truncate(movie.description, 80),
-                                style: const TextStyle(
-                                  color: Colors.white60,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Director: ${movie.director}',
-                                style: const TextStyle(
-                                  color: Colors.white54,
-                                  fontSize: 11,
-                                ),
-                              ),
-                              Text(
-                                'Date: ${movie.releasedDate.year}-${movie.releasedDate.month.toString().padLeft(2, '0')}-${movie.releasedDate.day.toString().padLeft(2, '0')}',
-                                style: const TextStyle(
-                                  color: Colors.white54,
-                                  fontSize: 11,
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      movie.title,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      truncate(movie.description, 80),
+                                      style: const TextStyle(
+                                        color: Colors.white60,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'Director: ${movie.director}',
+                                      style: const TextStyle(
+                                        color: Colors.white54,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Date: ${movie.releasedDate.year}-${movie.releasedDate.month.toString().padLeft(2, '0')}-${movie.releasedDate.day.toString().padLeft(2, '0')}',
+                                      style: const TextStyle(
+                                        color: Colors.white54,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ),
         ],
       ),
