@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_list/data/movie_data.dart';
 import 'package:movie_list/models/movies.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:movie_list/components/movie_skeleton.dart';
 
 const String movieTitle = "Movixor";
 
@@ -55,119 +55,6 @@ class _HomeState extends State<Home> {
     return '${text.substring(0, length)}...';
   }
 
-  Widget _buildSkeletonDetail() {
-    return Shimmer.fromColors(
-      baseColor: Colors.white12,
-      highlightColor: Colors.white24,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 160,
-            height: 160,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-            ),
-          ),
-          const SizedBox(height: 15),
-          Container(
-            width: 200,
-            height: 24,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            width: double.infinity,
-            height: 14,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-          const SizedBox(height: 5),
-          Container(
-            width: 150,
-            height: 14,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            width: 120,
-            height: 14,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSkeletonListItem() {
-    return Shimmer.fromColors(
-      baseColor: Colors.white10,
-      highlightColor: Colors.white24,
-      child: Card(
-        color: Colors.black26,
-        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-        child: Row(
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 150,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    width: double.infinity,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Container(
-                    width: 100,
-                    height: 10,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -202,7 +89,7 @@ class _HomeState extends State<Home> {
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
               child: (isLoadingAll || isLoadingDetail)
-                  ? _buildSkeletonDetail()
+                  ? const MovieSkeletonDetail()
                   : Column(
                       key: ValueKey<int>(selectedMovie.id),
                       mainAxisSize: MainAxisSize.min,
@@ -254,7 +141,8 @@ class _HomeState extends State<Home> {
             child: isLoadingAll
                 ? ListView.builder(
                     itemCount: 5,
-                    itemBuilder: (context, index) => _buildSkeletonListItem(),
+                    itemBuilder: (context, index) =>
+                        const MovieSkeletonListItem(),
                   )
                 : ListView.builder(
                     physics: const BouncingScrollPhysics(),

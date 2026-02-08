@@ -72,5 +72,5 @@ final List<Movie> movies = [
         'Captain Jack Sparrow, a witty and eccentric pirate, teams up with a blacksmith and a governor\'s daughter to rescue her from a cursed pirate crew. Filled with sword fights, supernatural elements, and unforgettable characters, this adventure sails into a world of magic and mayhem.',
     director: "Mang Jose ",
     releasedDate: DateTime.now(),
-  ),
+  ),  
 ];
